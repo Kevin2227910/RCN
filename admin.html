@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RCN Empleados</title>
+  <link rel="stylesheet" href="css2.css/admin.css">
+</head>
+
+  <!-- HEADER -->
+  <header class="rcn-header">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_RCN_Televisi%C3%B3n.png"  />
+    </div>
+ 
+
+    <nav class="main-nav">
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/A_index_empleados.html')">Inicio</button>
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/A_servicios_empleados.html')">Servicios</button>
+      <button onclick="navigateTo('https://www.canalrcn.com/co')">Canal RCN</button>
+    </nav>
+        <div class="header-icons">
+    </div>
+  </header>
+
+   <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+  </script>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOMORROWLAND 2025 - Administración</title>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; animation-delay: 0s;"></div>
+        <div class="floating-element" style="top: 20%; right: 10%; width: 40px; height: 40px; animation-delay: 1s;"></div>
+        <div class="floating-element" style="bottom: 20%; left: 20%; width: 50px; height: 50px; animation-delay: 2s;"></div>
+        <div class="floating-element" style="bottom: 10%; right: 20%; width: 30px; height: 30px; animation-delay: 3s;"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎵 TOMORROWLAND 2025 🎵</h1>
+            <div class="subtitle">Panel de Administración</div>
+        </div>
+
+        <div class="main-content">
+            <div class="navigation">
+            </div>
+
+            <h2>👥 Panel de Administración</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #666;">Gestión de reservas y usuarios registrados</p>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalReservations">0</div>
+                    <div class="stat-label">📊 Total Reservas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">$0</div>
+                    <div class="stat-label">💰 Ingresos Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTickets">0</div>
+                    <div class="stat-label">🎫 Boletos Vendidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="averageTicket">$0</div>
+                    <div class="stat-label">📈 Ticket Promedio</div>
+                </div>
+            </div>
+
+            <!-- Controles -->
+            <div class="controls-section">
+                <div class="control-group">
+                    <label>🔍 Buscar:</label>
+                    <input type="text" id="searchInput" placeholder="Nombre, email o teléfono..." oninput="filterReservations()">
+                </div>
+                <div class="control-group">
+                    <label>🎫 Filtrar por tipo:</label>
+                    <select id="ticketTypeFilter" onchange="filterReservations()">
+                        <option value="">Todos los tipos</option>
+                        <option value="general">General</option>
+                        <option value="vip">VIP</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>📅 Filtrar por día:</label>
+                    <select id="dayFilter" onchange="filterReservations()">
+                        <option value="">Todos los días</option>
+                        <option value="viernes">Viernes</option>
+                        <option value="sabado">Sábado</option>
+                        <option value="domingo">Domingo</option>
+                        <option value="pase-completo">Pase Completo</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <button class="btn btn-export" onclick="exportToCSV()">📥 Exportar CSV</button>
+                    <button class="btn btn-danger" onclick="clearAllReservations()">🗑️ Limpiar Todo</button>
+                </div>
+            </div>
+
+            <!-- Tabla de reservas -->
+            <div class="table-container">
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>👤 Usuario</th>
+                            <th>📧 Email</th>
+                            <th>📱 Teléfono</th>
+                            <th>🎂 Edad</th>
+                            <th>🎫 Tipo</th>
+                            <th>📅 Día</th>
+                            <th>👥 Cantidad</th>
+                            <th>💰 Total</th>
+                            <th>📊 Estado</th>
+                            <th>🕐 Fecha Reserva</th>
+                            <th>⚡ Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTableBody">
+                        <tr>
+                            <td colspan="12" class="empty-state">
+                                <h3>📋 No hay reservas registradas</h3>
+                                <p>Las reservas aparecerán aquí cuando los usuarios hagan sus reservaciones.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <div class="notification-content"></div>
+        <button class="notification-close" onclick="closeNotification()" title="Cerrar notificación">×</button>
+    </div>
+
+    <script>
+        let reservations = [];
+        let filteredReservations = [];
+
+        // Cargar reservas del localStorage
+        function loadReservations() {
+            reservations = JSON.parse(localStorage.getItem('electrofestReservations') || '[]');
+            filteredReservations = [...reservations];
+            updateAdminPanel();
+        }
+
+        // Actualizar panel de administración
+        function updateAdminPanel() {
+            const tbody = document.getElementById('reservationsTableBody');
+            
+            if (filteredReservations.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="empty-state">
+                            <h3> ${reservations.length === 0 ? 'No hay reservas registradas' : 'No se encontraron resultados'}</h3>
+                            <p>${reservations.length === 0 ? 'Las reservas aparecerán aquí cuando los usuarios hagan sus reservaciones.' : 'Intenta con otros filtros de búsqueda.'}</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = filteredReservations.map((reservation, index) => `
+                    <tr>
+                        <td>${reservation.id}</td>
+                        <td><strong>${reservation.fullName}</strong></td>
+                        <td>${reservation.email}</td>
+                        <td>${reservation.phone}</td>
+                        <td>${reservation.age}</td>
+                        <td><span style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 4px 8px; border-radius: 10px; font-size: 0.8rem;">${reservation.ticketType.toUpperCase()}</span></td>
+                        <td>${reservation.preferredDay}</td>
+                        <td>${reservation.ticketQuantity}</td>
+                        <td><strong>${reservation.totalAmount.toLocaleString('es-CO')}</strong></td>
+                        <td><span class="status-badge status-confirmed">${reservation.status}</span></td>
+                        <td>${reservation.reservationDate}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-small btn-danger" onclick="deleteReservation(${index})" title="Eliminar reserva">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            // Actualizar estadísticas
+            updateStatistics();
+        }
+
+        // Actualizar estadísticas
+        function updateStatistics() {
+            const totalReservations = reservations.length;
+            const totalRevenue = reservations.reduce((sum, r) => sum + r.totalAmount, 0);
+            const totalTickets = reservations.reduce((sum, r) => sum + r.ticketQuantity, 0);
+            const averageTicket = totalReservations > 0 ? Math.round(totalRevenue / totalReservations) : 0;
+
+            document.getElementById('totalReservations').textContent = totalReservations;
+            document.getElementById('totalRevenue').textContent = `${totalRevenue.toLocaleString('es-CO')}`;
+            document.getElementById('totalTickets').textContent = totalTickets;
+            document.getElementById('averageTicket').textContent = `${averageTicket.toLocaleString('es-CO')}`;
+        }
+
+        // Filtrar reservas
+        function filterReservations() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const ticketTypeFilter = document.getElementById('ticketTypeFilter').value;
+            const dayFilter = document.getElementById('dayFilter').value;
+
+            filteredReservations = reservations.filter(reservation => {
+                const matchesSearch = reservation.fullName.toLowerCase().includes(searchTerm) ||
+                                    reservation.email.toLowerCase().includes(searchTerm) ||
+                                    reservation.phone.includes(searchTerm);
+                
+                const matchesTicketType = !ticketTypeFilter || reservation.ticketType === ticketTypeFilter;
+                const matchesDay = !dayFilter || reservation.preferredDay === dayFilter;
+
+                return matchesSearch && matchesTicketType && matchesDay;
+            });
+
+            updateAdminPanel();
+        }
+
+        // Eliminar reserva
+        function deleteReservation(index) {
+            const reservation = filteredReservations[index];
+            if (confirm(`¿Estás seguro de que deseas eliminar la reserva de ${reservation.fullName}?`)) {
+                // Encontrar el índice real en el array principal
+                const realIndex = reservations.findIndex(r => r.id === reservation.id);
+                if (realIndex !== -1) {
+                    reservations.splice(realIndex, 1);
+                    localStorage.setItem('electrofestReservations', JSON.stringify(reservations));
+                    showNotification(`✅ Reserva de ${reservation.fullName} eliminada correctamente`);
+                    loadReservations();
+                }
+            }
+        }
+
+        // Limpiar todas las reservas
+        function clearAllReservations() {
+            if (reservations.length === 0) {
+                showNotification('No hay reservas para eliminar', 'error');
+                return;
+            }
+
+            if (confirm(`¿Estás seguro de que deseas eliminar todas las ${reservations.length} reservas? Esta acción no se puede deshacer.`)) {
+                localStorage.removeItem('electrofestReservations');
+                reservations = [];
+                filteredReservations = [];
+                updateAdminPanel();
+                showNotification('🗑️ Todas las reservas han sido eliminadas');
+            }
+        }
+
+        // Exportar a CSV
+        function exportToCSV() {
+            if (filteredReservations.length === 0) {
+                showNotification('No hay datos para exportar', 'error');
+                return;
+            }
+
+            const headers = ['ID', 'Nombre', 'Email', 'Teléfono', 'Edad', 'Tipo Boleto', 'Día', 'Cantidad', 'Total', 'Estado', 'Fecha Reserva'];
+            const csvContent = [
+                headers.join(','),
+                ...filteredReservations.map(r => [
+                    r.id,
+                    `"${r.fullName}"`,
+                    r.email,
+                    r.phone,
+                    r.age,
+                    r.ticketType,
+                    `"${r.preferredDay}"`,
+                    r.ticketQuantity,
+                    r.totalAmount,
+                    r.status,
+                    `"${r.reservationDate}"`
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `electrofest_reservas_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+
+            showNotification('📥 Archivo CSV exportado correctamente');
+        }
+
+        // Mostrar notificaciones
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationContent = notification.querySelector('.notification-content');
+            
+            notificationContent.textContent = message;
+            notification.style.background = type === 'error' 
+                ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
+                : 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)';
+            
+            notification.classList.add('show');
+            
+            // Auto-cerrar después de 5 segundos
+            clearTimeout(window.notificationTimeout);
+            window.notificationTimeout = setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        // Cerrar notificación
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+            clearTimeout(window.notificationTimeout);
+        }
+
+        // Auto-actualizar cada 30 segundos
+        setInterval(loadReservations, 30000);
+
+        // Cargar datos al iniciar
+        window.addEventListener('load', function() {
+            loadReservations();
+            document.body.style.animation = 'fadeIn 1s ease';
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   

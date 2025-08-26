@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCN Empleados</title>
+    <link rel="stylesheet" href="css2.css/nomina.css">
+</head>
+  <!-- HEADER -->
+  <header class="rcn-header">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_RCN_Televisi%C3%B3n.png"  />
+    </div>
+ 
+
+    <nav class="main-nav">
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/A_index_empleados.html')">Inicio</button>
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/A_servicios_empleados.html')">Servicios</button>
+      <button onclick="navigateTo('https://www.canalrcn.com/co')">Canal RCN</button>
+    </nav>
+        <div class="header-icons">
+    </div>
+  </header>
+
+   <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+  </script>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Sistema de Digiturnos</h1>
+            <p>Gestión de turnos para nómina de empleados</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="totalEmployees">0</h3>
+                <p>Empleados Registrados</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="currentTurnNumber">-</h3>
+                <p>Turno Actual</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="queueLength">0</h3>
+                <p>En Cola</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2>📝 Solicitar Turno</h2>
+                <form id="employeeForm">
+                    <div class="form-group">
+                        <label for="employeeName">Nombres Completos:</label>
+                        <input type="text" id="employeeName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employeeId">Número de Identificación:</label>
+                        <input type="text" id="employeeId" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employeeAge">Edad:</label>
+                        <input type="number" id="employeeAge" min="18" max="100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="employeePosition">Cargo:</label>
+                        <select id="employeePosition" required>
+                            <option value="">Seleccione un cargo</option>
+                            <option value="Gerente">Gerente</option>
+                            <option value="Supervisor">Supervisor</option>
+                            <option value="Analista">Analista</option>
+                            <option value="Asistente">Asistente</option>
+                            <option value="Técnico">Técnico</option>
+                            <option value="Operario">Operario</option>
+                            <option value="Recepcionista">Recepcionista</option>
+                            <option value="Contador">Contador</option>
+                            <option value="Desarrollador">Desarrollador</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn">🎫 Generar Turno</button>
+                </form>
+            </div>
+
+            <div class="queue-section">
+                <h2>🎪 Cola de Turnos</h2>
+                
+                <div id="currentTurnDisplay" class="current-turn" style="display: none;">
+                    <h3>🔔 Turno Actual</h3>
+                    <div class="turn-number" id="currentTurnText">A001</div>
+                    <div id="currentEmployeeInfo"></div>
+                </div>
+
+                <div class="controls">
+                    <button id="nextTurnBtn" class="btn btn-secondary">⏭️ Siguiente Turno</button>
+                    <button id="resetQueueBtn" class="btn btn-danger">🔄 Reiniciar Cola</button>
+                </div>
+
+                <div class="queue-display">
+                    <h3>📋 Próximos Turnos</h3>
+                    <div id="queueList" class="queue-list">
+                        <div class="empty-queue">
+                            <p>No hay turnos en cola</p>
+                            <p>Genere el primer turno para comenzar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class DigitalTurnSystem {
+            constructor() {
+                this.employees = [];
+                this.queue = [];
+                this.currentTurn = null;
+                this.turnCounter = 1;
+                this.currentTurnIndex = 0;
+                this.initializeEventListeners();
+                this.updateDisplay();
+            }
+
+            initializeEventListeners() {
+                const form = document.getElementById('employeeForm');
+                const nextTurnBtn = document.getElementById('nextTurnBtn');
+                const resetQueueBtn = document.getElementById('resetQueueBtn');
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addEmployee();
+                });
+
+                nextTurnBtn.addEventListener('click', () => {
+                    this.nextTurn();
+                });
+
+                resetQueueBtn.addEventListener('click', () => {
+                    this.resetQueue();
+                });
+            }
+
+            addEmployee() {
+                const name = document.getElementById('employeeName').value.trim();
+                const id = document.getElementById('employeeId').value.trim();
+                const age = parseInt(document.getElementById('employeeAge').value);
+                const position = document.getElementById('employeePosition').value;
+
+                // Validar que no exista el empleado por ID
+                if (this.employees.some(emp => emp.id === id)) {
+                    alert('Ya existe un empleado con este número de identificación.');
+                    return;
+                }
+
+                const employee = {
+                    name: name,
+                    id: id,
+                    age: age,
+                    position: position,
+                    turnNumber: this.generateTurnNumber(),
+                    timestamp: new Date()
+                };
+
+                this.employees.push(employee);
+                this.queue.push(employee);
+                
+                // Limpiar formulario
+                document.getElementById('employeeForm').reset();
+                
+                // Si es el primer turno, establecerlo como actual
+                if (this.queue.length === 1 && !this.currentTurn) {
+                    this.nextTurn();
+                }
+                
+                this.updateDisplay();
+                this.showNotification(`Turno ${employee.turnNumber} asignado a ${employee.name}`);
+            }
+
+            generateTurnNumber() {
+                const letter = String.fromCharCode(65 + Math.floor((this.turnCounter - 1) / 999));
+                const number = String(((this.turnCounter - 1) % 999) + 1).padStart(3, '0');
+                this.turnCounter++;
+                return `${letter}${number}`;
+            }
+
+            nextTurn() {
+                if (this.queue.length === 0) {
+                    alert('No hay turnos en la cola');
+                    return;
+                }
+
+                this.currentTurn = this.queue.shift();
+                this.updateDisplay();
+                this.showNotification(`Ahora atendiendo: ${this.currentTurn.turnNumber} - ${this.currentTurn.name}`);
+                
+                // Reproducir sonido de notificación (simulado)
+                this.playTurnSound();
+            }
+
+            resetQueue() {
+                if (confirm('¿Está seguro de que desea reiniciar toda la cola de turnos?')) {
+                    this.employees = [];
+                    this.queue = [];
+                    this.currentTurn = null;
+                    this.turnCounter = 1;
+                    this.currentTurnIndex = 0;
+                    this.updateDisplay();
+                    this.showNotification('Cola de turnos reiniciada');
+                }
+            }
+
+            updateDisplay() {
+                this.updateStats();
+                this.updateCurrentTurn();
+                this.updateQueueList();
+            }
+
+            updateStats() {
+                document.getElementById('totalEmployees').textContent = this.employees.length;
+                document.getElementById('currentTurnNumber').textContent = this.currentTurn ? this.currentTurn.turnNumber : '-';
+                document.getElementById('queueLength').textContent = this.queue.length;
+            }
+
+            updateCurrentTurn() {
+                const currentTurnDisplay = document.getElementById('currentTurnDisplay');
+                const currentTurnText = document.getElementById('currentTurnText');
+                const currentEmployeeInfo = document.getElementById('currentEmployeeInfo');
+
+                if (this.currentTurn) {
+                    currentTurnDisplay.style.display = 'block';
+                    currentTurnText.textContent = this.currentTurn.turnNumber;
+                    currentEmployeeInfo.innerHTML = `
+                        <div><strong>${this.currentTurn.name}</strong></div>
+                        <div>ID: ${this.currentTurn.id} | ${this.currentTurn.position} | ${this.currentTurn.age} años</div>
+                    `;
+                } else {
+                    currentTurnDisplay.style.display = 'none';
+                }
+            }
+
+            updateQueueList() {
+                const queueList = document.getElementById('queueList');
+                
+                if (this.queue.length === 0) {
+                    queueList.innerHTML = `
+                        <div class="empty-queue">
+                            <p>No hay turnos en cola</p>
+                            <p>Genere el primer turno para comenzar</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                queueList.innerHTML = this.queue.map((employee, index) => `
+                    <div class="queue-item">
+                        <div class="turn-info">
+                            <span class="turn-number-small">${employee.turnNumber}</span>
+                            <span class="employee-info">${this.formatTime(employee.timestamp)}</span>
+                        </div>
+                        <div class="employee-name">${employee.name}</div>
+                        <div class="employee-info">
+                            ID: ${employee.id} • ${employee.position} • ${employee.age} años
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            formatTime(timestamp) {
+                return timestamp.toLocaleTimeString('es-CO', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            showNotification(message) {
+                // Crear notificación temporal
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #4CAF50, #45a049);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    z-index: 1000;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                
+                // Animar entrada
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                // Animar salida y remover
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            playTurnSound() {
+                // Crear contexto de audio para simular sonido de llamada
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0, audioContext.currentTime + 0.3);
+                    
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.3);
+                } catch (error) {
+                    console.log('Audio no disponible');
+                }
+            }
+        }
+
+        // Inicializar el sistema cuando se carga la página
+        document.addEventListener('DOMContentLoaded', () => {
+            new DigitalTurnSystem();
+        });
+    </script>
+</body>
+</html>

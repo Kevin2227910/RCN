@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RCN Servicio al cliente</title>
+  <link rel="stylesheet" href="css2.css/admin_usuario.css">
+</head>
+
+  <!-- HEADER -->
+  <header class="rcn-header">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_RCN_Televisi%C3%B3n.png"  />
+    </div>
+ 
+
+    <nav class="main-nav">
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/A_index_empleados.html')">Inicio</button>
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/A_servicios_empleados.html')">Servicios</button>
+      <button onclick="navigateTo('https://www.canalrcn.com/co')">Canal RCN</button>
+    </nav>
+    <div class="header-icons">
+    </div>
+  </header>
+
+   <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+  </script>
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroFest 2024 - Administración</title>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; animation-delay: 0s;"></div>
+        <div class="floating-element" style="top: 20%; right: 10%; width: 40px; height: 40px; animation-delay: 1s;"></div>
+        <div class="floating-element" style="bottom: 20%; left: 20%; width: 50px; height: 50px; animation-delay: 2s;"></div>
+        <div class="floating-element" style="bottom: 10%; right: 20%; width: 30px; height: 30px; animation-delay: 3s;"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎵 TOMORROWLAND 2024 🎵</h1>
+            <div class="subtitle">Panel de Administración</div>
+        </div>
+
+        <div class="main-content">
+            <div class="navigation">
+                <a href="servicios_TOMORROWLAND.html" class="nav-link"> Reservar Boletos</a>
+            </div>
+
+            <h2>Panel de Administración</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #666;">Gestiona tus reservas</p>
+
+
+            <!-- Tabla de reservas -->
+            <div class="table-container">
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>👤 Usuario</th>
+                            <th>📧 Email</th>
+                            <th>📱 Teléfono</th>
+                            <th>🎂 Edad</th>
+                            <th>🎫 Tipo</th>
+                            <th>📅 Día</th>
+                            <th>👥 Cantidad</th>
+                            <th>💰 Total</th>
+                            <th>📊 Estado</th>
+                            <th>🕐 Fecha Reserva</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsTableBody">
+                        <tr>
+                            <td colspan="12" class="empty-state">
+                                <h3>No hay reservas registradas</h3>
+                                <p>Las reservas aparecerán aquí cuando hagas una reservacion.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <div class="notification-content"></div>
+        <button class="notification-close" onclick="closeNotification()" title="Cerrar notificación">×</button>
+    </div>
+
+    <script>
+        let reservations = [];
+        let filteredReservations = [];
+
+        // Cargar reservas del localStorage
+        function loadReservations() {
+            reservations = JSON.parse(localStorage.getItem('electrofestReservations') || '[]');
+            filteredReservations = [...reservations];
+            updateAdminPanel();
+        }
+
+        // Actualizar panel de administración
+        function updateAdminPanel() {
+            const tbody = document.getElementById('reservationsTableBody');
+            
+            if (filteredReservations.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="12" class="empty-state">
+                            <h3> ${reservations.length === 0 ? 'No hay reservas registradas' : 'No se encontraron resultados'}</h3>
+                            <p>${reservations.length === 0 ? 'Las reservas aparecerán aquí cuando los usuarios hagan sus reservaciones.' : 'Intenta con otros filtros de búsqueda.'}</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = filteredReservations.map((reservation, index) => `
+                    <tr>
+                        <td>${reservation.id}</td>
+                        <td><strong>${reservation.fullName}</strong></td>
+                        <td>${reservation.email}</td>
+                        <td>${reservation.phone}</td>
+                        <td>${reservation.age}</td>
+                        <td><span style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 4px 8px; border-radius: 10px; font-size: 0.8rem;">${reservation.ticketType.toUpperCase()}</span></td>
+                        <td>${reservation.preferredDay}</td>
+                        <td>${reservation.ticketQuantity}</td>
+                        <td><strong>${reservation.totalAmount.toLocaleString('es-CO')}</strong></td>
+                        <td><span class="status-badge status-confirmed">${reservation.status}</span></td>
+                        <td>${reservation.reservationDate}</td>
+                    </tr>
+                `).join('');
+            }
+
+        }
+
+
+        // Filtrar reservas
+        function filterReservations() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const ticketTypeFilter = document.getElementById('ticketTypeFilter').value;
+            const dayFilter = document.getElementById('dayFilter').value;
+
+            filteredReservations = reservations.filter(reservation => {
+                const matchesSearch = reservation.fullName.toLowerCase().includes(searchTerm) ||
+                                    reservation.email.toLowerCase().includes(searchTerm) ||
+                                    reservation.phone.includes(searchTerm);
+                
+                const matchesTicketType = !ticketTypeFilter || reservation.ticketType === ticketTypeFilter;
+                const matchesDay = !dayFilter || reservation.preferredDay === dayFilter;
+
+                return matchesSearch && matchesTicketType && matchesDay;
+            });
+
+            updateAdminPanel();
+        }
+
+
+
+        // Mostrar notificaciones
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationContent = notification.querySelector('.notification-content');
+            
+            notificationContent.textContent = message;
+            notification.style.background = type === 'error' 
+                ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
+                : 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)';
+            
+            notification.classList.add('show');
+            
+            // Auto-cerrar después de 5 segundos
+            clearTimeout(window.notificationTimeout);
+            window.notificationTimeout = setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        // Cerrar notificación
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+            clearTimeout(window.notificationTimeout);
+        }
+
+        // Auto-actualizar cada 30 segundos
+        setInterval(loadReservations, 30000);
+
+        // Cargar datos al iniciar
+        window.addEventListener('load', function() {
+            loadReservations();
+            document.body.style.animation = 'fadeIn 1s ease';
+        });
+    </script>
+</body>
+</html>

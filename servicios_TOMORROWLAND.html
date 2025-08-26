@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RCN Servicio al cliente</title>
+  <link rel="stylesheet" href="css2.css/TOMORROWLAND.CSS"> 
+</head>
+
+  <!-- HEADER -->
+  <header class="rcn-header">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_RCN_Televisi%C3%B3n.png"  />
+    </div>
+ 
+
+    <nav class="main-nav">
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/index.html')">Inicio</button>
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/servicios.html')">Servicios</button>
+      <button onclick="navigateTo('file:///C:/Users/ESTUDIANTE/Desktop/Proyecto/pagina%20principal/ayuda.html')">Ayuda</button>
+      <button onclick="navigateTo('https://www.canalrcn.com/co')">Canal RCN</button>
+    </nav>
+    <div class="header-icons">
+    </div>
+  </header>
+
+   <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+  </script>
+
+
+<body>
+    <div class="floating-elements">
+        <div class="floating-element" style="top: 10%; left: 10%; width: 60px; height: 60px; animation-delay: 0s;"></div>
+        <div class="floating-element" style="top: 20%; right: 10%; width: 40px; height: 40px; animation-delay: 1s;"></div>
+        <div class="floating-element" style="bottom: 20%; left: 20%; width: 50px; height: 50px; animation-delay: 2s;"></div>
+        <div class="floating-element" style="bottom: 10%; right: 20%; width: 30px; height: 30px; animation-delay: 3s;"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎵 TOMORROWLAND 2025 🎵</h1>
+            <div class="subtitle">El Festival de Música Electrónica más Grande del Mundo</div>
+            <div class="date"> 10-12 Octubre 2025 |  Parque Norte, Medellin</div>
+        </div>
+
+        <div class="main-content">
+            <div class="navigation">
+                <a href="admin_usuario.html" class="nav-link"> Administración</a>
+            </div>
+
+            <h2>🎟️ Agenda tu Experiencia Electrónica</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem; color: #666;">Únete a la experiencia musical más increíble del año con los mejores DJs del mundo.</p>
+
+            <form id="bookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label> Nombre Completo</label>
+                        <input type="text" id="fullName" required placeholder="Tu nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label> Correo Electrónico</label>
+                        <input type="email" id="email" required placeholder="tu@email.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label> Teléfono</label>
+                        <input type="tel" id="phone" maxlength="10" pattern="[0-9]{10}" required placeholder="3001234567">
+                    </div>
+                    <div class="form-group">
+                        <label> Edad</label>
+                        <input type="number" id="age" min="16" required placeholder="18">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label> Selecciona tu Boleto</label>
+                    <div class="ticket-options">
+                        <div class="ticket-card" data-type="general" data-price="150000">
+                            <h3>🎪 General</h3>
+                            <div class="price">$150,000 COP</div>
+                            <div class="description">Acceso general al festival, zona de baile principal</div>
+                        </div>
+                        <div class="ticket-card" data-type="vip" data-price="350000">
+                            <h3>⭐ VIP</h3>
+                            <div class="price">$350,000 COP</div>
+                            <div class="description">Área VIP, bar exclusivo, vista privilegiada del escenario</div>
+                        </div>
+                        <div class="ticket-card" data-type="premium" data-price="500000">
+                            <h3>💎 Premium</h3>
+                            <div class="price">$500,000 COP</div>
+                            <div class="description">Todo incluido, meet & greet con DJs, zona backstage</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label> Fecha</label>
+                        <select id="preferredDay" required>
+                            <option value="">Selecciona un día</option>
+                            <option value="viernes">Viernes 10 Oct - Noche de apertura</option>
+                            <option value="sabado">Sábado 11 Oct - Evento principal</option>
+                            <option value="domingo">Domingo 12 Oct - Noche de cierre</option>
+                            <option value="pase-completo">Pase Completo (3 días)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label> Cantidad de Boletos</label>
+                        <select id="ticketQuantity" required>
+                            <option value="">Selecciona cantidad</option>
+                            <option value="1">1 Boleto</option>
+                            <option value="2">2 Boletos</option>
+                            <option value="3">3 Boletos</option>
+                            <option value="4">4 Boletos</option>
+                            <option value="5">5 Boletos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn"> Reservar Mis Boletos Ahora</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">
+        <div class="notification-content"></div>
+        <button class="notification-close" onclick="closeNotification()" title="Cerrar notificación">×</button>
+    </div>
+
+
+
+
+
+
+    <script>
+        let selectedTicketType = null;
+        let selectedTicketPrice = 0;
+
+        // Selección de boletos
+        document.querySelectorAll('.ticket-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedTicketType = this.dataset.type;
+                selectedTicketPrice = parseInt(this.dataset.price);
+            });
+        });
+
+        // Manejo del formulario
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedTicketType) {
+                showNotification('Por favor selecciona un tipo de boleto', 'error');
+                return;
+            }
+
+            const formData = {
+                id: Date.now(),
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                age: document.getElementById('age').value,
+                ticketType: selectedTicketType,
+                ticketPrice: selectedTicketPrice,
+                preferredDay: document.getElementById('preferredDay').value,
+                ticketQuantity: parseInt(document.getElementById('ticketQuantity').value),
+                totalAmount: selectedTicketPrice * parseInt(document.getElementById('ticketQuantity').value),
+                reservationDate: new Date().toLocaleString('es-CO'),
+                status: 'Confirmado'
+            };
+
+            // Obtener reservas existentes del localStorage
+            let reservations = JSON.parse(localStorage.getItem('electrofestReservations') || '[]');
+            
+            // Agregar nueva reserva
+            reservations.push(formData);
+            
+            // Guardar en localStorage
+            localStorage.setItem('electrofestReservations', JSON.stringify(reservations));
+            
+            showNotification(`🎉 ¡Reserva confirmada! Hola ${formData.fullName}, tus ${formData.ticketQuantity} boleto(s) ${formData.ticketType.toUpperCase()} han sido reservados para el ${formData.preferredDay}.`);
+            
+            // Limpiar formulario
+            document.getElementById('bookingForm').reset();
+            document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('selected'));
+            selectedTicketType = null;
+            selectedTicketPrice = 0;
+        });
+
+        // Mostrar notificaciones
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationContent = notification.querySelector('.notification-content');
+            
+            notificationContent.textContent = message;
+            notification.style.background = type === 'error' 
+                ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)'
+                : 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)';
+            
+            notification.classList.add('show');
+            
+            // Auto-cerrar después de 5 segundos
+            clearTimeout(window.notificationTimeout);
+            window.notificationTimeout = setTimeout(() => {
+                closeNotification();
+            }, 5000);
+        }
+
+        // Cerrar notificación
+        function closeNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+            clearTimeout(window.notificationTimeout);
+        }
+
+        // Efectos de animación al cargar
+        window.addEventListener('load', function() {
+            document.body.style.animation = 'fadeIn 1s ease';
+        });
+    </script>
+</body>
+
+
+

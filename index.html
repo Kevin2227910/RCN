@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RCN Televisión</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="rcn-header">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_RCN_Televisi%C3%B3n.png"  />
+    </div>
+ 
+
+    <nav class="main-nav">
+      <button onclick="navigateTo('index.html')">Inicio</button>
+      <button onclick="navigateTo('servicios.html')">Servicios</button>
+      <button onclick="navigateTo('Ayuda.html')">Ayuda</button>
+      <button onclick="navigateTo('https://www.canalrcn.com/co')">Canal RCN</button>
+    </nav>
+    <div class="header-icons">
+      <a class="form-btn" href="C:\Users\ESTUDIANTE\Desktop\Proyecto\Pagina\RCN_Servicio_al_Cliente.html">Iniciar Sesión</a>
+    </div>
+  </header>
+
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrusel de Imágenes</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .carousel {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      overflow: hidden;
+      border-radius: 15px;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 500px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      color: rgb(255, 255, 255);
+      padding: 40px;
+    }
+
+    .slide h2 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .slide p {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .slide a {
+      padding: 10px 20px;
+      background-color: rgba(0, 0, 0, 0.445);
+
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.055);
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 1;
+      border-radius: 70%;
+    }
+
+    .arrow:hover {
+      background-color: rgba(0, 0, 0, 0.219);
+    }
+
+    .left {
+      left: 10px;
+    }
+
+    .right {
+      right: 10px;
+
+    }
+
+    .dots {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .dot {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      margin: 0 4px;
+      background-color: #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background-color: #333;
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+  <div class="carousel">
+    <div class="slides" id="slideContainer">
+      <div class="slide" style="background-image: url('https://th.bing.com/th/id/R.8642038ec52a9497617fa48283bf0720?rik=fg6zJXQUm%2fmDtA&pid=ImgRaw&r=0');">
+        <h2>Noticias en vivo</h2>
+      </div>
+      <div class="slide" style="background-image: url('https://loyalty-imagenes.canalrcn.com/loyalty/images/strapi/dario_gomez_el_rey_del_despecho_elenco_503c251ae3.jpg');">
+        <h2>Señal que conecta corazones</h2>
+      </div>
+    </div>
+
+    <button class="arrow left" onclick="moveSlide(-1)">&#10094;</button>
+    <button class="arrow right" onclick="moveSlide(1)">&#10095;</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll(".slide");
+    const slideContainer = document.getElementById("slideContainer");
+    const dotsContainer = document.getElementById("dots");
+
+    function showSlide(index) {
+      if (index >= slides.length) currentSlide = 0;
+      else if (index < 0) currentSlide = slides.length - 1;
+      else currentSlide = index;
+
+      slideContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+      updateDots();
+    }
+
+    function moveSlide(direction) {
+      showSlide(currentSlide + direction);
+    }
+
+
+
+    // Inicializar
+    showSlide(currentSlide);
+  </script>
+
+</body>
+
+
+
+
+
+
+  <!-- FOOTER -->
+  <footer class="rcn-footer">
+        <p>Síguenos por nuestras redes</p>
+        <div class="icons">
+          <span>📘</span>
+          <span>✖️</span>
+          <span>📸</span>
+          <span>🎵</span>
+          <span>🟢</span>
+          <span>▶️</span>
+        </div>
+      </div>
+
+      <div class="footer-columns">
+        <div>
+          <h4>Portal corporativo</h4>
+          <ul>
+            <li>Atención al televidente</li>
+            <li>Responsabilidad Social</li>
+            <li>Prensa RCN</li>
+            <li>Línea ética</li>
+            <li>Atención al inversionista</li>
+            <li>Código de autorregulación</li>
+            <li>OBA</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Nuestros Portales</h4>
+          <ul>
+            <li>Canal RCN</li>
+            <li>Zona interactiva</li>
+            <li>Noticias RCN</li>
+            <li>SuperLike</li>
+            <li>Market RCN</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Portales aliados</h4>
+          <ul>
+            <li>Estudios RCN</li>
+            <li>RCN Comerciales</li>
+            <li>RCN Radio</li>
+            <li>La República</li>
+            <li>Win Sports</li>
+            <li>NTN 24</li>
+            <li>TDT</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Términos de Uso | Política de privacidad | Ayuda</p>
+      <p class="product">Un producto de Canal RCN TELEVISIÓN 2025</p>
+    </div>
+  </footer>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>RCN Empleados</title>
+  <link rel="stylesheet" href="css/A_servicios_empleados.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="rcn-header">
+    <div class="logo">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Logo_RCN_Televisi%C3%B3n.png"  />
+    </div>
+ 
+
+    <nav class="main-nav">
+      <button onclick="navigateTo('A_index_empleados.html')">Inicio</button>
+      <button onclick="navigateTo('A_servicios_empleados.html')">Servicios</button>
+      <button onclick="navigateTo('https://www.canalrcn.com/co')">Canal RCN</button>
+    </nav>
+    <div class="header-icons">
+    </div>
+  </header>
+
+
+  
+
+  <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios Empresariales</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎫</div>
+                <h2 class="service-title">TOMORROWLAND</h2>
+                <p class="service-description">Administre las entrdas para Tomorrowland.</p>
+                <a class="service-button" href="index/admin.html">Agendar</a>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">📝</div>
+                <h2 class="service-title">NOMINA</h2>
+                <p class="service-description">Consulte sus nomina quincenal como empleado.</p>
+                <a class="service-button" href="index/nomina.html">Consultar</a>
+            </div>
+
+            <div class="service-card">
+                <div class="service-icon">💻</div>
+                <h2 class="service-title">Tecnología para su empresa</h2>
+                <p class="service-description">Solicítela aquí, pronto lo contactaremos.</p>
+                <a href="#" class="service-button">Adquirir tecnología</a>
+            </div>
+
+
+        </div>
+    </div>
+
+    
+
+
+    <script>
+        // Efecto de hover mejorado para las tarjetas
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-12px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Funcionalidad del botón de ayuda
+        document.querySelector('.help-button').addEventListener('click', function() {
+            alert('¿En qué podemos ayudarlo? Nuestro equipo de soporte está disponible 24/7.');
+        });
+
+        // Funcionalidad del botón de accesibilidad
+        document.querySelector('.accessibility-btn').addEventListener('click', function() {
+            alert('Opciones de accesibilidad: Texto grande, alto contraste, navegación por teclado disponibles.');
+        });
+
+        // Scroll suave para los botones
+        document.querySelectorAll('.service-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Aquí puedes agregar la lógica de navegación específica
+                console.log('Navegando a:', this.textContent);
+            });
+        });
+    </script>
+</body>
+</html>
+
+  <!-- FOOTER -->
+  <footer class="rcn-footer">
+        <p>Síguenos por nuestras redes</p>
+        <div class="icons">
+          <span>📘</span>
+          <span>✖️</span>
+          <span>📸</span>
+          <span>🎵</span>
+          <span>🟢</span>
+          <span>▶️</span>
+        </div>
+      </div>
+
+      <div class="footer-columns">
+        <div>
+          <h4>Portal corporativo</h4>
+          <ul>
+            <li>Atención al televidente</li>
+            <li>Responsabilidad Social</li>
+            <li>Prensa RCN</li>
+            <li>Línea ética</li>
+            <li>Atención al inversionista</li>
+            <li>Código de autorregulación</li>
+            <li>OBA</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Nuestros Portales</h4>
+          <ul>
+            <li>Canal RCN</li>
+            <li>Zona interactiva</li>
+            <li>Noticias RCN</li>
+            <li>SuperLike</li>
+            <li>Market RCN</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Portales aliados</h4>
+          <ul>
+            <li>Estudios RCN</li>
+            <li>RCN Comerciales</li>
+            <li>RCN Radio</li>
+            <li>La República</li>
+            <li>Win Sports</li>
+            <li>NTN 24</li>
+            <li>TDT</li>
+          </ul>
+        </div><object data="" type=""></object>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Términos de Uso | Política de privacidad | Ayuda</p>
+      <p class="product">Un producto de Canal RCN TELEVISIÓN 2025</p>
+    </div>
+  </footer>
+
+  <script>
+    function navigateTo(page) {
+      window.location.href = page;
+    }
+  </script>
+
+</body>
+</html>

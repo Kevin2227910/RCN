@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCN Servicio al cliente - Inicio de Sesión</title>
+      <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <p class="title">Bienvenido</p>
+        <p class="subtitle">Ingrese sus credenciales para continuar</p>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <form class="form" id="loginForm">
+            <div class="user-type-selector">
+                <div class="user-type-option selected" data-type="usuario" id="usuarioOption">
+                    Usuario
+                </div>
+                <div class="user-type-option" data-type="empleado" id="empleadoOption">
+                    Empleado
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" class="input" id="username" placeholder="Nombre de usuario o email" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" class="input" id="password" placeholder="Contraseña" required>
+            </div>
+
+            <div class="page-link">
+                <span class="page-link-label" onclick="forgotPassword()">¿Olvidó su contraseña?</span>
+            </div>
+            
+            <button type="submit" class="form-btn">Iniciar Sesión</button>
+        </form>
+
+        <div class="sign-up-container">
+            <p class="sign-up-label">¿No tiene una cuenta? 
+                <a class="sign-up-link" href="registro.html">Regístrate</a> 
+            </p>
+        </div>
+
+        <div class="divider">
+            <span>o</span>
+        </div>
+
+        <a class="google-login-button" href="#" onclick="googleLogin()">
+            <svg class="google-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12 c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24 c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657 C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36 c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571 c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+            </svg>
+            Continuar con Google
+        </a>
+    </div>
+
+    <script>
+        class LoginSystem {
+            constructor() {
+                this.selectedUserType = 'usuario';
+                this.users = this.loadUsers();
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                // Selector de tipo de usuario
+                const userTypeOptions = document.querySelectorAll('.user-type-option');
+                userTypeOptions.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        // Remover selección previa
+                        userTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                        // Seleccionar nueva opción
+                        e.target.classList.add('selected');
+                        this.selectedUserType = e.target.dataset.type;
+                    });
+                });
+
+                // Formulario de login
+                const loginForm = document.getElementById('loginForm');
+                loginForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+            }
+
+            loadUsers() {
+                // Base de datos simulada de usuarios
+                return {
+                    usuarios: [
+                        { username: 'usuario1', password: '123456', email: 'usuario1@rcn.com', name: 'Juan Pérez' },
+                        { username: 'cliente1', password: 'password', email: 'cliente1@gmail.com', name: 'María García' },
+                        { username: 'user@rcn.com', password: 'user123', email: 'user@rcn.com', name: 'Ana López' }
+                    ],
+                    empleados: [
+                        { username: 'admin', password: 'admin123', email: 'admin@rcn.com', name: 'Carlos Rodríguez', position: 'Administrador' },
+                        { username: 'soporte1', password: 'soporte123', email: 'soporte1@rcn.com', name: 'Laura Martínez', position: 'Agente de Soporte' },
+                        { username: 'supervisor', password: 'super123', email: 'supervisor@rcn.com', name: 'Roberto Silva', position: 'Supervisor' }
+                    ]
+                };
+            }
+
+            handleLogin() {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+
+                // Validar campos
+                if (!username || !password) {
+                    this.showError('Por favor complete todos los campos');
+                    return;
+                }
+
+                // Buscar usuario según el tipo seleccionado
+                const userDatabase = this.selectedUserType === 'usuario' ? this.users.usuarios : this.users.empleados;
+                const user = userDatabase.find(u => 
+                    (u.username === username || u.email === username) && u.password === password
+                );
+
+                if (user) {
+                    this.showSuccess(`¡Bienvenido ${user.name}!`);
+                    
+                    // Guardar información de sesión
+                    const sessionData = {
+                        user: user,
+                        userType: this.selectedUserType,
+                        loginTime: new Date().toISOString()
+                    };
+                    
+                    // Simular guardado en localStorage (no se puede usar en artifacts)
+                    // localStorage.setItem('userSession', JSON.stringify(sessionData));
+                    
+                    // Redireccionar después de un breve delay
+                    setTimeout(() => {
+                        this.redirectUser();
+                    }, 1500);
+                    
+                } else {
+                    this.showError('Usuario o contraseña incorrectos');
+                }
+            }
+
+            redirectUser() {
+                if (this.selectedUserType === 'usuario') {
+                    // Redireccionar a la página de usuarios/clientes
+                    window.location.href = 'pagina principal/index.html';
+                } else {
+                    // Redireccionar a la página de empleados
+                    window.location.href = 'pagina principal/A_index_empleados.html';
+                }
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                const successDiv = document.getElementById('successMessage');
+                
+                successDiv.style.display = 'none';
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                // Ocultar después de 5 segundos
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
+
+            showSuccess(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                const successDiv = document.getElementById('successMessage');
+                
+                errorDiv.style.display = 'none';
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                
+                // Ocultar después de 3 segundos
+                setTimeout(() => {
+                    successDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+
+        // Inicializar el sistema cuando se carga la página
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoginSystem();
+        });
+
+        // Función para mostrar credenciales de prueba
+        function showTestCredentials() {
+            const credentials = `
+CREDENCIALES DE PRUEBA:
+
+USUARIOS:
+- usuario1 / 123456
+- cliente1 / password
+- user@rcn.com / user123
+
+EMPLEADOS:
+- admin / admin123
+- soporte1 / soporte123
+- supervisor / super123
+
+Selecciona el tipo de usuario y usa estas credenciales para probar.
+            `;
+            alert(credentials);
+        }
+
+        // Mostrar credenciales automáticamente (solo para demostración)
+        setTimeout(showTestCredentials, 2000);
+    </script>
+</body>
+</html>
